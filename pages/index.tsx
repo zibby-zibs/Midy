@@ -25,7 +25,7 @@ export default function Home({posts}: Props) {
       <section className='flex justify-between items-center bg-yellow-400 border-y border-black py-10 max-w-7xl lg:py-0'>
         <aside className='px-10 space-y-5'>
           <h1 className='text-6xl max-w-xl font-serif capitalize'><span className='underline decoration-4'>medium</span> is a place to read and connect</h1>
-          <h2>It's easy and free to post your thinking on any topic and connect with millions of people</h2>
+          <h2>It&apos;s easy and free to post your thinking on any topic and connect with millions of people</h2>
         </aside>
         <aside className='hidden md:inline-flex h-32 lg:h-full'>
           <img src="https://accountabilitylab.org/wp-content/uploads/2020/03/Medium-logo.png" alt="medium" />
