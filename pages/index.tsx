@@ -5,6 +5,7 @@ import Header from '../components/Header'
 import { sanityClient } from '../sanity'
 import { Post } from '../typings'
 import Link from 'next/link'
+import { useState } from 'react'
 // import styles from '../styles/Home.module.css'
 
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts}: Props) {
+
   return (
     <section className='max-w-7xl m-auto'>
       <Head>
