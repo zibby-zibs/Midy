@@ -82,6 +82,7 @@ const Post = ({post}: Props) => {
     <main>
         <Head>
             <title>Midy | {post?.title}</title>
+            <link rel="icon" href="https://accountabilitylab.org/wp-content/uploads/2020/03/Medium-logo.png" />
         </Head>
         <Header />
 

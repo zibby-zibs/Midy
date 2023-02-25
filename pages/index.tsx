@@ -21,7 +21,7 @@ export default function Home({posts}: Props) {
         <title>Midy</title>
         <meta name="description" content="Figure this out yourself" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="https://accountabilitylab.org/wp-content/uploads/2020/03/Medium-logo.png" />
       </Head>
       <Header/>
       <section className='flex justify-between items-center bg-yellow-400 border-y border-black py-10 max-w-7xl lg:py-0'>
@@ -58,8 +58,7 @@ export default function Home({posts}: Props) {
                <div className='flex justify-between p-5 bg-white'>
                   <div>
                     <p className='text-lg'>{post.title}</p>
-                    <p className='text-sm'>{post.description} by {post.author.name}</p>
-                    
+                    <p className='text-sm '><span className="text-[gray]">{post.description}</span> by {post.author.name}</p> 
                   </div>
                   <Image 
                     src={post?.author?.image?.asset?.url} 
