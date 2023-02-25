@@ -1,13 +1,12 @@
 import { GetStaticProps } from 'next'
+import Head from 'next/head'
 import React, { useState } from 'react'
 import Header from '../../components/Header'
 import { sanityClient, urlFor } from '../../sanity'
 import { Post } from '../../typings'
-import { useRouter } from 'next/router'
 import {PortableText} from '@portabletext/react'
 import {useForm, SubmitHandler } from 'react-hook-form'
 import Image from 'next/image'
-import urlBuilder from '@sanity/image-url'
 import {getImageDimensions} from '@sanity/asset-utils'
 
 
@@ -50,24 +49,6 @@ const Post = ({post}: Props) => {
     const SampleImageComponent = ({value, isInline}) => {
         const {width, height} = getImageDimensions(value)
         return (
-        //   <img
-        //     src={urlBuilder()
-        //       .image(value)
-        //       .fit('max')
-        //       .width(isInline ? 100 : 800)
-        //       .auto('format')
-        //       .url()}
-        //     alt={value.alt || ' '}
-        //     loading="lazy"
-        //     style={{
-        //         // Display alongside text if image appears inside a block text span
-        //         display: isInline ? 'inline-block' : 'block',
-        
-        //         // Avoid jumping around with aspect-ratio CSS property
-        //         aspectRatio: width / height,
-        //       }}
-        //   />
-
         <img 
          src={urlFor(value)
             .url()}
@@ -99,6 +80,9 @@ const Post = ({post}: Props) => {
 
   return (
     <main>
+        <Head>
+            <title>Midy | {post?.title}</title>
+        </Head>
         <Header />
 
        <Image 
@@ -130,48 +114,27 @@ const Post = ({post}: Props) => {
             <div className=''>
                 
                 <PortableText 
-                        value={post?.body}
-                        components={{
-                            block: {
-                                h1: ({children}) => <h1 className="text-2xl font-bold my-5">{children}</h1>,
-                                h2: ({children}) => <h2 className="text-xl font-bold my-5">{children}</h2>,
-                            },
-                            marks: {
-                                link: ({value, children}) =>{
-                                    const target = (value?.href || '').startsWith('http' || 'https') ? '_blank' : undefined
-                                    return (
-                                    <a href={value?.href}  className="text-blue-500 hover:underline">{children}</a>)
-                                }
-                            },
-                            listItem: {
-                                bullet: ({children}) => <ul className='ml-4 list-none'>{children}</ul>,
-                            },
-                            types: {
-                                image: SampleImageComponent,
+                    value={post?.body}
+                    components={{
+                        block: {
+                            h1: ({children}) => <h1 className="text-2xl font-bold my-5">{children}</h1>,
+                            h2: ({children}) => <h2 className="text-xl font-bold my-5">{children}</h2>,
+                        },
+                        marks: {
+                            link: ({value, children}) =>{
+                                const target = (value?.href || '').startsWith('http' || 'https') ? '_blank' : undefined
+                                return (
+                                <a href={value?.href}  className="text-blue-500 hover:underline">{children}</a>)
                             }
-                        }}
-                        
-                    />
-                                {/* <PortableText 
-                    dataset={process.env.NEXT_PUBLIC_SANITY_DATASET!}
-                    projectId={process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!}
-                    content={post?.body}
-                    serializers={{
-                        h1:( props: any) => {
-                            <h1 className='text-2xl font-bold my-5' {...props}/>
                         },
-                        h2:( props: any) => {
-                            <h2 className='text-xl font-bold my-5' {...props}/>
+                        listItem: {
+                            bullet: ({children}) => <ul className='ml-4 list-none'>{children}</ul>,
                         },
-                        li:( {children}: any) => {
-                            <li className='ml-4 list-none'>{children}</li>
-                        },
-                        link:( {href, children}: any) => {
-                           <a href={href} className="text-blue-500 hover:underline">{children}</a>
-                        }, 
+                        types: {
+                            image: SampleImageComponent,
+                        }
                     }}
-                /> */}
-                
+                />
             </div>
        </article>
         
