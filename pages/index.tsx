@@ -28,7 +28,14 @@ export default function Home({posts}: Props) {
           <h2>It&apos;s easy and free to post your thinking on any topic and connect with millions of people</h2>
         </aside>
         <aside className='hidden md:inline-flex h-32 lg:h-full'>
-          <img src="https://accountabilitylab.org/wp-content/uploads/2020/03/Medium-logo.png" alt="medium" />
+          <Image 
+            src="https://accountabilitylab.org/wp-content/uploads/2020/03/Medium-logo.png" 
+            alt="medium" 
+            height={0}
+            width={0}
+            sizes='100%'
+            className='h-32 object-cover'
+          />
         </aside>
       </section>
 
@@ -38,9 +45,12 @@ export default function Home({posts}: Props) {
           return (
           <Link key={post._id} href={`/post/${post.slug.current}`}>
             <div className='border rounded-lg group cursor-pointer overflow-hidden'>
-                  <img 
+                  <Image
                     src={ post.mainImage?.asset?.url } 
-                    alt="" 
+                    alt=""
+                    height={0}
+                    width={0}
+                    sizes="100%"
                     className='h-60 w-full object-cover group-hover:scale-105 transition-transform duration 200 ease-in-out'
                   />
                <div className='flex justify-between p-5 bg-white'>
@@ -49,10 +59,13 @@ export default function Home({posts}: Props) {
                     <p className='text-sm'>{post.description} by {post.author.name}</p>
                     
                   </div>
-                  <img 
+                  <Image 
                     src={post?.author?.image?.asset?.url} 
-                    alt="" 
-                    className='h-12 w-12 rounded-full'
+                    alt=""
+                    height={0}
+                    width={0}
+                    sizes="100%"
+                    className='h-12 w-12 rounded-full object-cover'
                   />
                </div>
             </div>

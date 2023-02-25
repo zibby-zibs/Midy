@@ -1,12 +1,14 @@
 import { GetStaticProps } from 'next'
 import React, { useState } from 'react'
 import Header from '../../components/Header'
-import { sanityClient } from '../../sanity'
+import { sanityClient, urlFor } from '../../sanity'
 import { Post } from '../../typings'
 import { useRouter } from 'next/router'
-import PortableText from 'react-portable-text'
+import {PortableText} from '@portabletext/react'
 import {useForm, SubmitHandler } from 'react-hook-form'
-
+import Image from 'next/image'
+import urlBuilder from '@sanity/image-url'
+import {getImageDimensions} from '@sanity/asset-utils'
 
 
 interface IformInput {
@@ -45,32 +47,114 @@ const Post = ({post}: Props) => {
         })
     }
 
+    const SampleImageComponent = ({value, isInline}) => {
+        const {width, height} = getImageDimensions(value)
+        return (
+        //   <img
+        //     src={urlBuilder()
+        //       .image(value)
+        //       .fit('max')
+        //       .width(isInline ? 100 : 800)
+        //       .auto('format')
+        //       .url()}
+        //     alt={value.alt || ' '}
+        //     loading="lazy"
+        //     style={{
+        //         // Display alongside text if image appears inside a block text span
+        //         display: isInline ? 'inline-block' : 'block',
+        
+        //         // Avoid jumping around with aspect-ratio CSS property
+        //         aspectRatio: width / height,
+        //       }}
+        //   />
+
+        <img 
+         src={urlFor(value)
+            .url()}
+         alt=""
+        />
+        )
+      }
+      
+
+    const myPortableComponents ={
+        block: {
+            h1: ({children}) => <h1 className="text-2xl font-bold my-5">{children}</h1>,
+            h2: ({children}) => <h2 className="text-xl font-bold my-5">{children}</h2>,
+        },
+        marks: {
+            link: ({value, children}) =>{
+                const target = (value?.href || '').startsWith('http' || 'https') ? '_blank' : undefined
+                return (
+                <a href={value?.href}  className="text-blue-500 hover:underline">{children}</a>)
+            }
+        },
+        listItem: {
+            bullet: ({children}) => <ul className='ml-4 list-none'>{children}</ul>,
+        },
+        types: {
+            image: SampleImageComponent,
+        }
+    }
 
   return (
     <main>
         <Header />
 
-       <img src={post?.mainImage?.asset?.url} alt="" 
-        className='w-full h-40 object-cover'
+       <Image 
+            src={post?.mainImage?.asset?.url} 
+            alt="" 
+            width={0}
+            height={0}
+            sizes='100%'
+            className='w-full h-40 object-cover'
        />
        <article className='max-w-3xl mx-auto p-5'>
             <h1 className='text-3xl mt-10 mb-3'>{post?.title}</h1>
             <h2 className='text-xl font-light text-gray-500 mb-2'>{post?.description}</h2>
 
             <div className='flex items-center space-x-l'>
-                <img src={post?.author?.image?.asset?.url} alt="" 
+                <Image src={post?.author?.image?.asset?.url} 
+                    alt="" 
+                    width={0}
+                    height={0}
+                    sizes='100%'
                     className='h-10 w-10 rounded-full'
                 />
                 <p className='font-extralight text-sm'>
                     Blog post by <span className='text-green-500'>{post?.author?.name}</span>
-                    &nbsp; - Published at {new Date(post?._createdAt).toDateString()}
+                    &nbsp; - Published at {new Date(post?.publishedAt).toDateString()}
                 </p>
             </div>
 
             <div className=''>
+                
                 <PortableText 
+                        value={post?.body}
+                        components={{
+                            block: {
+                                h1: ({children}) => <h1 className="text-2xl font-bold my-5">{children}</h1>,
+                                h2: ({children}) => <h2 className="text-xl font-bold my-5">{children}</h2>,
+                            },
+                            marks: {
+                                link: ({value, children}) =>{
+                                    const target = (value?.href || '').startsWith('http' || 'https') ? '_blank' : undefined
+                                    return (
+                                    <a href={value?.href}  className="text-blue-500 hover:underline">{children}</a>)
+                                }
+                            },
+                            listItem: {
+                                bullet: ({children}) => <ul className='ml-4 list-none'>{children}</ul>,
+                            },
+                            types: {
+                                image: SampleImageComponent,
+                            }
+                        }}
+                        
+                    />
+                                {/* <PortableText 
                     dataset={process.env.NEXT_PUBLIC_SANITY_DATASET!}
-                    projectId= {process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!}
+                    projectId={process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!}
                     content={post?.body}
                     serializers={{
                         h1:( props: any) => {
@@ -83,10 +167,11 @@ const Post = ({post}: Props) => {
                             <li className='ml-4 list-none'>{children}</li>
                         },
                         link:( {href, children}: any) => {
-                            <a href={href} className="text-blue-500 hover:underline">{children}</a>
-                        },
+                           <a href={href} className="text-blue-500 hover:underline">{children}</a>
+                        }, 
                     }}
-                />
+                /> */}
+                
             </div>
        </article>
         
@@ -142,9 +227,7 @@ const Post = ({post}: Props) => {
                 {
                     errors && (
                     <div>
-                        
-                            <span className='text-red-500 text-sm'>All fields are required</span>
-                      
+                        <span className='text-red-500 text-sm'>All fields are required</span>
                     </div>
                     )
                 }
@@ -202,6 +285,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
           }
         },
         description,
+        publishedAt,
         mainImage {
           asset ->{
             _id,
@@ -224,7 +308,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
             props: {
                 post,
             },
-            revalidate: 60,
+            revalidate: 36000,
         }
 }
 

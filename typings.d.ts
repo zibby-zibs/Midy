@@ -11,6 +11,7 @@ export interface Post {
             }
         }
     };
+    publishedAt: string;
     comments: Comments[];
     description: string;
     mainImage: {
@@ -22,7 +23,7 @@ export interface Post {
     slug: {
         current: string;
     };
-    body: [object];
+    body: [];
 
 }
 
